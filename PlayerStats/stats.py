@@ -1,13 +1,12 @@
 import requests
 import datetime
 import json
-import csv
-import sys
+import sys, os, csv
 #########################
 ###      CONFIG      ###
 #######################
-### First available season would be 1999-00
-MAX_RETRIES = 0
+### First available season would be 1997-98
+MAX_RETRIES = -1
 BASE_PARAMS = {
     #Check the README for all exceptable
     'DateFrom': "", #type: str; format month/day/year
@@ -43,7 +42,7 @@ def get_query_year(year):
     first_year = now.year - 1
     second_year = (now.year) % 1000
 
-    #Stats are not available before 1946
+    #Stats are not available before 1997
     if year >= 1997 and year <= now.year - 1:
         first_year = str(year)
         second_year = (year + 1) % 1000
@@ -58,6 +57,7 @@ def get_data_for_season(year, retries=0):
     query = BASE_PARAMS
     query['Season'] = q_year
     data = requests.get(BASE_URL, params=query)
+
     try:
         data = data.json()['resultSets'][0]
     except ValueError:
@@ -71,9 +71,11 @@ def get_data_for_season(year, retries=0):
 
     return data
 
-def write_stats_for_season(year, filename=None, append=False):
+def write_stats_for_season(year, filename=None, data_dir=None, append=False):
     q_year = get_query_year(year)
     fname = filename if filename else '%s-Player-Stats.csv' % q_year
+    full_path = fname if not data_dir else os.path.join(data_dir, fname)
+    print full_path
 
     data = get_data_for_season(year)
     headers = data['headers']
@@ -81,7 +83,7 @@ def write_stats_for_season(year, filename=None, append=False):
 
     file_perm = 'ab' if append else 'wb'
 
-    with open(fname, file_perm) as file_ouput:
+    with open(full_path, file_perm) as file_ouput:
         csv_writer = csv.writer(file_ouput)
         csv_writer.writerow(headers)
         csv_writer.writerows(player_data)
