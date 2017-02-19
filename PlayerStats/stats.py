@@ -7,6 +7,9 @@ import sys, os, csv
 #######################
 ### First available season would be 1997-98
 MAX_RETRIES = -1
+
+DEFAULT_TIMEOUT = 5
+
 BASE_PARAMS = {
     #Check the README for all acceptable
     'DateFrom': "", #type: str; format month/day/year
@@ -66,18 +69,24 @@ def get_data_for_season(year=0, current=False, retries=0):
     q_year = get_query_year(year, current=current)
     query = BASE_PARAMS
     query['Season'] = q_year
-    data = requests.get(BASE_URL, params=query)
 
     try:
+        data = requests.get(BASE_URL, params=query, timeout=DEFAULT_TIMEOUT)
         data = data.json()['resultSets'][0]
     except ValueError:
         if retries >  MAX_RETRIES:
             print 'Query url: %s' % data.url
             print 'Failed to pull data from nba.com for %s' % year
             print "Try again later."
-            sys.exit()
+            sys.exit(1)
         retries += 1
-        get_data_for_season(year, retries=retries)
+        return get_data_for_season(year, retries=retries)
+    except requests.exceptions.ReadTimeout as e:
+        if retries > MAX_RETRIES:
+            print 'Failed to pull data from nba.com due to Timeout Error'
+            sys.exit(1)
+        retries += 1
+        return get_data_for_season(year, retries=retries)
 
     return data
 
@@ -96,3 +105,5 @@ def write_stats_for_season(year, filename=None, folder=None, append=False):
         csv_writer = csv.writer(file_ouput)
         csv_writer.writerow(headers)
         csv_writer.writerows(player_data)
+
+write_stats_for_season(1997, folder='data/')
