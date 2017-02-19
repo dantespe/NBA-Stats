@@ -71,10 +71,10 @@ def get_data_for_season(year, retries=0):
 
     return data
 
-def write_stats_for_season(year, filename=None, data_dir=None, append=False):
+def write_stats_for_season(year, filename=None, folder=None, append=False):
     q_year = get_query_year(year)
     fname = filename if filename else '%s-Player-Stats.csv' % q_year
-    full_path = fname if not data_dir else os.path.join(data_dir, fname)
+    full_path = fname if not folder else os.path.join(folder, fname)
     print full_path
 
     data = get_data_for_season(year)
