@@ -16,7 +16,9 @@ The first is `DateFrom` which is in the format:  `mm/dd/yyyy`.
 The next is `DateTo` which is in the format:
 `mm/dd/yyyy`.
 
-The range from `DateFrom` to `DateTo` represents the timeframe of statistics. NOTE: `DateFrom` to `DateTo` should be within the range of `Season`.
+The range from `DateFrom` to `DateTo` represents the timeframe of statistics.
+
+NOTE: `DateFrom` to `DateTo` should be within the range of `Season`.
 
 `GameScope` can be either `Yesterday` or `Last 10`. This is a quick shorthand way to get stats from yesterday or the last 10 games.
 
@@ -27,3 +29,25 @@ The range from `DateFrom` to `DateTo` represents the timeframe of statistics. NO
 `LeagueID` can be either `00` for the NBA or `20` for the NBA Developmental League.
 
 `Location` can be either `home` or `road`.
+
+`MeasureType` can be any of `Base`, `Advanced`, `Misc`, `Four Factors`, `Scoring`, `Opponent`, `Usage`, or `Defense`.
+
+
+`Month` can be `0` to `12`.
+
+`OpponentTeamID` is clearly the team of ID of the opponent. You can find them [here](https://github.com/seemethere/nba_py/wiki/stats.nba.com-Endpoint-Documentation) under the Team IDs section.
+
+`Outcome` can be `W` or `L`.
+
+`PaceAdjust` can be either `Y` or `N`.
+
+`Season` is in the form `YYYY-YY`. For example, `2016-17` would be the current season.
+
+`SeasonType` can be `Regular`, `Pre Season`, `Playoffs`, or `All Star`.
+
+`StarterBench` can be `Starters` or `Bench`.
+
+`VsConference` can be `East` or `West`.
+
+`VsDivision` can be `Atlantic`, `Central`, `Pacific`
+, `Northwest`, `Southeast`, `Southwest`, `East`, or `West`.
