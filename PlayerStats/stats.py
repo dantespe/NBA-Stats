@@ -37,23 +37,33 @@ BASE_PARAMS = {
 
 BASE_URL = "http://stats.nba.com/stats/leaguedashplayerstats"
 
-def get_query_year(year):
+def get_query_year(year, current=False):
     now = datetime.datetime.now()
-    first_year = now.year - 1
-    second_year = (now.year) % 1000
 
     #Stats are not available before 1997
-    if year >= 1997 and year <= now.year - 1:
-        first_year = str(year)
-        second_year = (year + 1) % 1000
+    if year < 1997 or year > now.year:
+        current = True #ignoring the year
+
+    if current:
+        if now.month <= 6: #NBA season ends in June
+            year = now.year - 1
+            first_year = now.year - 1
+            second_year = (now.year) % 100
+        else:
+            year = now.year
+            first_year = now.year
+            second_year = (now.year + 1) % 100
+    else:
+        first_year = year
+        second_year = (year + 1) % 100
 
     if second_year < 10:
         #syntax should be 00 not 0
         second_year = '0' + str(second_year)
     return str(first_year) + "-" + str(second_year)
 
-def get_data_for_season(year, retries=0):
-    q_year = get_query_year(year)
+def get_data_for_season(year=0, current=False, retries=0):
+    q_year = get_query_year(year, current=current)
     query = BASE_PARAMS
     query['Season'] = q_year
     data = requests.get(BASE_URL, params=query)
