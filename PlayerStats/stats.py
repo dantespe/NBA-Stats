@@ -8,7 +8,7 @@ import sys, os, csv
 ### First available season would be 1997-98
 MAX_RETRIES = -1
 BASE_PARAMS = {
-    #Check the README for all exceptable
+    #Check the README for all acceptable
     'DateFrom': "", #type: str; format month/day/year
     "DateTo": "", #str format month/day/year
     "GameScope": "", #Yesterday or Last 10
